@@ -22,6 +22,7 @@ canvas.height = window.innerHeight
 let player = {
     x: 10,
     y: 270,
+    vy: 0, //velocity
     w: 10,
     h: 25,
     c: "black"
@@ -66,6 +67,9 @@ function spawner() {
 let canJump = false
 
 let score = 0;
+
+let isDie = false;
+
 function game() {
     if (canvas.width !== window_width || canvas.height !== window_height) {
         location.reload()
@@ -81,9 +85,10 @@ function game() {
             score += 1
         }
         
-        if (RectsColliding(player, CactusParam)) {
+        if (RectsColliding(player, CactusParam) && !isDie) {
             alert("your score congrats " + score + " this game madebye hiyo A.K.A daffa")
             location.reload()
+            isDie = true;
         }
     })
     
@@ -96,8 +101,11 @@ function game() {
 
     if (!RectsColliding(lantai, player)) {
         canJump = false
-        player.y += 2
+        player.vy += 0.9;
+        player.y += player.vy;
     } else {
+        player.y = lantai.y-player.h;
+        player.vy = 0;
         canJump = true
         return;
     }
@@ -106,14 +114,16 @@ function game() {
 
 addEventListener("click", () => {
     if (canJump) {
-        player.y -= 70
+        player.vy = -10;
+        player.y -= 1;
     }
 })
 
 addEventListener("keypress", (event) => {
     if (canJump) {
         if (event.key === " ") {
-            player.y -= 70
+            player.vy = -10;
+            player.y -= 1;
         }
     }
 })
